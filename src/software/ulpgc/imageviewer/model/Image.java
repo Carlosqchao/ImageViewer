@@ -1,9 +1,8 @@
 package software.ulpgc.imageviewer.model;
 
 public interface Image {
-    String name();
 
-    int id();
+    String id();
     Image next();
 
     Image randomnext();

@@ -19,9 +19,9 @@ public class Main {
         ImagePresenter presenter = new ImagePresenter(frame.getImageDisplay());
         presenter.show(image());
         frame.getImageDisplay().show(image());
-        frame.add("Prev", new PreviousImageCommand(frame.getImageDisplay()));
-        frame.add("Next", new NextImageCommand(frame.getImageDisplay()));
-        frame.add("Random", new RandomImageCommand(frame.getImageDisplay()));
+        frame.add("Prev", new PreviousImageCommand(presenter));
+        frame.add("Next", new NextImageCommand(presenter));
+        frame.add("Random", new RandomImageCommand(presenter));
         File path = new File("");
         String Path = path.getAbsolutePath();
         String imageUrlInput= "https://img.icons8.com/?size=100&id=ooYry2iVu6Gr&format=png&color=000000";
@@ -36,4 +36,5 @@ public class Main {
         String picturesPath = Paths.get(username, "Pictures").toString();
         return new FileImageLoader(new File(picturesPath)).load();
     }
+
 }

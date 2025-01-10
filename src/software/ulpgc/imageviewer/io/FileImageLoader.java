@@ -16,7 +16,7 @@ public class FileImageLoader implements ImageLoader {
 
     private static final Set<String> imageExtensions = Set.of(".jpg", ".png",".jpeg");
     private static FilenameFilter isImage() {
-        return (dir, name) -> imageExtensions.stream().anyMatch(name::endsWith);
+        return (_, name) -> imageExtensions.stream().anyMatch(name::endsWith);
     }
 
     @Override
@@ -27,30 +27,31 @@ public class FileImageLoader implements ImageLoader {
     private Image imageAt(int i) {
         return new Image() {
             @Override
-            public String name() {
+            public String id() {
+                assert files != null;
                 return files[i].getAbsolutePath();
             }
 
-            @Override
-            public int id() {
-                return i;
-            }
 
             @Override
             public Image next() {
+                assert files != null;
                 return imageAt((i+1) % files.length);
             }
 
             @Override
             public Image randomnext(){
                 Random random = new Random();
+                assert files != null;
                 return imageAt(random.nextInt(files.length));
             }
 
             @Override
             public Image prev() {
+                assert files != null;
                 return imageAt((i-1+ files.length) % files.length);
             }
+
         };
     }
 }

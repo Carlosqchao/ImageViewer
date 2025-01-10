@@ -52,4 +52,8 @@ public class ImagePresenter {
         this.display.clear();
         this.display.paint(image.id(), 0);
     }
+
+    public Image getImage() {
+        return image;
+    }
 }

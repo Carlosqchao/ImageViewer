@@ -41,7 +41,7 @@ public class MainFrame extends JFrame {
     }
     private Component createButton(String label) {
         JButton button = new JButton(label);
-        button.addActionListener(e -> commands.get(label).execute());
+        button.addActionListener(_ -> commands.get(label).execute());
         return button;
     }
     public void add(String name, Command command) {

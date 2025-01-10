@@ -1,16 +1,16 @@
 package software.ulpgc.imageviewer.control;
 
-import software.ulpgc.imageviewer.view.ImageDisplay;
+import software.ulpgc.imageviewer.presenter.ImagePresenter;
 
 public class RandomImageCommand implements Command{
-    private final ImageDisplay imageDisplay;
+    private final ImagePresenter presenter;
 
-    public RandomImageCommand(ImageDisplay imageDisplay) {
-        this.imageDisplay = imageDisplay;
+    public RandomImageCommand(ImagePresenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override
     public void execute() {
-        imageDisplay.show(imageDisplay.image().randomnext());
+        presenter.show(presenter.getImage().randomnext());
     }
 }

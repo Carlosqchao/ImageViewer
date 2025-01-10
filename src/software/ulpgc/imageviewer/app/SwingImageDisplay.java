@@ -2,6 +2,7 @@ package software.ulpgc.imageviewer.app;
 
 import software.ulpgc.imageviewer.model.Image;
 import software.ulpgc.imageviewer.view.ImageDisplay;
+import software.ulpgc.imageviewer.view.ViewPort;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,7 +14,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class SwingImageDisplay extends JPanel implements ImageDisplay {
@@ -23,7 +26,8 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
 
     private Image image;
     private BufferedImage bitmap;
-    private List<Paint> paints = new ArrayList<>();
+    private final List<Paint> paints = new ArrayList<>();
+    private final Map<String,BufferedImage> gallery = new HashMap<>();
 
     public SwingImageDisplay() {
         this.addMouseListener(mouseListener());
@@ -76,7 +80,7 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
     @Override
     public void show(Image image) {
         this.image = image;
-        this.bitmap = load(image.name());
+        this.bitmap = load(image.id());
         this.repaint();
     }
     @Override
@@ -84,32 +88,31 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        if (bitmap == null) return;
-
-        int x = (this.getWidth() - bitmap.getWidth()) / 2;
-        int y = (this.getHeight() - bitmap.getHeight()) / 2;
-
         for (Paint paint : paints) {
-            g.drawImage(bitmap, x + paint.offset, y, null);
+            checkSaved(paint);
+            bitmap = gallery.get(paint.id());
+            ViewPort fitted = getViewPort();
+            int x = (this.getWidth()-fitted.width())/2;
+            int y = (this.getHeight()- fitted.height())/2;
+
+            g.drawImage(bitmap,x+ paint.offset,y,fitted.width(),fitted.height(),null);
         }
     }
 
+    private ViewPort getViewPort() {
+        ViewPort viewPort = ViewPort.ofSize(this.getWidth(), this.getHeight());
+        return viewPort.fit(this.getWidth(), this.getHeight());
+    }
 
-
-    public static class Resizer {
-        private final Dimension dimension;
-
-        public Resizer(Dimension dimension) {
-            this.dimension = dimension;
-        }
-
-        public Dimension resize(Dimension dimension) {
-            return null;
+    private void checkSaved(Paint paint) {
+        if (!gallery.containsKey(paint.id())){
+            gallery.put(paint.id(),load(paint.id()));
         }
     }
+
 
     @Override
-    public void paint(int id, int offset) {
+    public void paint(String id, int offset) {
         paints.add(new Paint(id, offset));
         repaint();
     }
@@ -143,6 +146,7 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
             throw new RuntimeException(e);
         }
     }
-    private record Paint(int id, int offset) {
+    private record Paint(String id, int offset) {
     }
+
 }

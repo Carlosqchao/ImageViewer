@@ -3,7 +3,7 @@ package software.ulpgc.imageviewer.view;
 import software.ulpgc.imageviewer.model.Image;
 
 public interface ImageDisplay {
-    void paint(int id, int offset);
+    void paint(String id, int offset);
     int getWidth();
     void clear();
     void on(Shift shift);
